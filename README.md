@@ -15,6 +15,6 @@ or one which implements the same api.
 ### Quickstart
 
 To get started clone or download this repository and copy the
-`leaves.js` or `leaves-min.js` from the `public/leaves-compressed`
+`leaves.js` or `leaves-min.js` from the `public/leaves-compressed/`
 directory to your web project.
 
