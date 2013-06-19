@@ -45,7 +45,7 @@ for this client.
 
 Now that you have a todos list document you can operate on it.
 
-Adding to the end of an array:
+*Adding* to the end of an array:
 ```javascript
 YourApp.todos_json.add(['todos_list'], { content: "buy milk" });
 // -> { todos_list: [ { content: "buy milk" } ] }
@@ -55,6 +55,32 @@ YourApp.todos_json.add(['todos_list'], { content: "copy car key" });
 ```
 
 The first argument to `add` is a path to the node in the JSON document
-that you want to add something to.
+that you want to add something to. In this case `['todos_list']` is a
+path to the todos_list array in this document.
+
+This data is now stored on the service.  If you want to track when
+changes are made to the document simply attach a listener:
+
+```javascript
+YourApp.todos_json.changed( function(json_document) { 
+  // do something awesome with the data
+} );
+```
+
+### Operations
+
+The following is a whirlwind tour of the possible operations.
+
+#### Setting map keys
 
 
+
+
+
+
+
+
+
+### Document Paths
+
+Todo
