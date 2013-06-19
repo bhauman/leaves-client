@@ -1,4 +1,4 @@
-### The Leaves Javascript client
+### The Leaves Javascript Client
 
 > Leaves is exploratory and pre alpha.
 
@@ -17,7 +17,7 @@ or one which implements the same api.
 To get started clone or download this repository and copy the
 `leaves.js` or `leaves-min.js` from the `public/leaves-compressed/`
 directory to your web project. You will also need to copy the
-`public/js/vendor/cookies.js` file as well. [see cookies here](//github.com/ScottHamper/Cookies)
+`public/js/vendor/cookies.js` file as well. [Or get it here.](//github.com/ScottHamper/Cookies)
 
 Then link to it in the head of your HTML document or template:
 
@@ -33,7 +33,6 @@ Then link to it in the head of your HTML document or template:
 The easiest integration route is to create a json document as follows:
 
 ```javascript
-
 YourApp = YourApp || {};
 
 YourApp.todos_json = Leaves.DocManager.from_cookie('org.example.todos_app.todos_list',
@@ -44,5 +43,15 @@ This creates a new JSON document on the scratch.leaves.io web
 service or fetches an existing one if there is already a cookie set
 for this client.
 
+Now that you have a todos list document you can operate on it.
+
+```javascript
+// You can add todo items to the todos_list array
+YourApp.todos_json.add(['todos_list'], { content: "buy milk" });
+// new_state -> { todos_list: [ { content: "buy milk" } ] }
+```
+
+This appends a new todo item to the todos list and the new state of
+the document is
 
 
