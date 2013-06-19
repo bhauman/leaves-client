@@ -45,13 +45,16 @@ for this client.
 
 Now that you have a todos list document you can operate on it.
 
+Adding to the end of an array:
 ```javascript
-// You can add todo items to the todos_list array
 YourApp.todos_json.add(['todos_list'], { content: "buy milk" });
-// new_state -> { todos_list: [ { content: "buy milk" } ] }
+// -> { todos_list: [ { content: "buy milk" } ] }
+
+YourApp.todos_json.add(['todos_list'], { content: "copy car key" });
+// -> { todos_list: [ { content: "buy milk" }, { content: "copy car key" } ] }
 ```
 
-This appends a new todo item to the todos list and the new state of
-the document is
+The first argument to `add` is a path to the node in the JSON document
+that you want to add something to.
 
 
