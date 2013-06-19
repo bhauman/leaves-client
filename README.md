@@ -73,7 +73,7 @@ Most operations take a document path.  A document path is simply an
 array describing the path to an item in the document. Given the
 following document:
 
-```json
+```javascript
 { moves_so_far: [2, 5], 
   players: [ { name: "Bonnie", plays_as: "X" }, 
              { name: "Clyde", plays_as: "O" } ] }
