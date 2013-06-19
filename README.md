@@ -18,3 +18,13 @@ To get started clone or download this repository and copy the
 `leaves.js` or `leaves-min.js` from the `public/leaves-compressed/`
 directory to your web project.
 
+Then link to it in the head of your HTML document or template:
+
+```
+<html>
+  <head>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+    <script src="//your-public-javascripts-dir/leaves-min.js"></script>
+  </head>
+```
+
