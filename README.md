@@ -69,14 +69,40 @@ YourApp.todos_json.changed( function(json_document) {
 
 ### Operations
 
-The following is a whirlwind tour of the possible operations.
+The following is a whirlwind tour of the available operations. All of
+the following operations are cumulative and based on an initial
+document: `{ moves_so_far: []}`
 
-#### Setting map keys
+#### Creating the document
 
+```javascript
+TTT.game_data = Leaves.DocManager.from_data({ moves_so_far: [], players: [] });
 
+/// or with cookie storage
+TTT.game_data = Leaves.DocManager.from_cookie('tic_tac_toe', { moves_so_far: [], players: [] });
+```
 
+#### Setting a key on the document
 
+```javascript
+TTT.game_data.set(['players'], []);
+//-> { moves_so_far: [], players: [] }
 
+TTT.game_data.set(['players', 0], { name: "Greg" });
+//-> { moves_so_far: [], players: [ {name: "Greg"} ] }
+
+TTT.game_data.set(['players', 0, 'plays_as'], "X");
+//-> { moves_so_far: [], players: [ { name: "Greg", plays_as: "X" } ] }
+```
+
+#### Adding an element to an array
+
+```javascript
+TTT.game_data.add(['players'], { name: "Bob", plays_as: "O" });
+// -> { moves_so_far: [], 
+//      players: [ { name: "Bonnie", plays_as: "X" }, 
+//                 { name: "Clyde", plays_as: "O" } ] }
+```
 
 
 
