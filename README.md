@@ -20,7 +20,7 @@ directory to your web project.
 
 Then link to it in the head of your HTML document or template:
 
-```
+```html
 <html>
   <head>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
