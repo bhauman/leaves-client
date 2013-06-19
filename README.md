@@ -16,7 +16,8 @@ or one which implements the same api.
 
 To get started clone or download this repository and copy the
 `leaves.js` or `leaves-min.js` from the `public/leaves-compressed/`
-directory to your web project.
+directory to your web project. You will also need to copy the
+`public/js/vendor/cookies.js` file as well. [see cookies here](//github.com/ScottHamper/Cookies)
 
 Then link to it in the head of your HTML document or template:
 
@@ -24,7 +25,24 @@ Then link to it in the head of your HTML document or template:
 <html>
   <head>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+    <script src="//your-public-javascripts-dir/cookies.js"></script>
     <script src="//your-public-javascripts-dir/leaves-min.js"></script>
   </head>
 ```
+
+The easiest integration route is to create a json document as follows:
+
+```javascript
+
+YourApp = YourApp || {};
+
+YourApp.todos_json = Leaves.DocManager.from_cookie('org.example.todos_app.todos_list',
+                                                   { todos_list: [] });
+```
+
+This creates a new JSON document on the scratch.leaves.io web
+service or fetches an existing one if there is already a cookie set
+for this client.
+
+
 
