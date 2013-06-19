@@ -98,17 +98,260 @@ changes are made to the document simply attach a listener:</p>
 </pre></div>
 
 <h3>
-<a name="operations" class="anchor" href="#operations"><span class="octicon octicon-link"></span></a>Operations</h3>
-
-<p>The following is a whirlwind tour of the possible operations.</p>
-
-<h4>
-<a name="setting-map-keys" class="anchor" href="#setting-map-keys"><span class="octicon octicon-link"></span></a>Setting map keys</h4>
-
-<h3>
 <a name="document-paths" class="anchor" href="#document-paths"><span class="octicon octicon-link"></span></a>Document Paths</h3>
 
-<p>Todo</p>
+<p>Most operations take a document path.  A document path is simply an
+array describing the path to an item in the document. Given the
+following document:</p>
+
+<div class="highlight"><pre><span class="p">{</span> <span class="err">moves_so_far:</span> <span class="err">[2,</span> <span class="err">5],</span> 
+  <span class="err">players:</span> <span class="err">[</span> <span class="err">{</span> <span class="err">name:</span> <span class="nt">"Bonnie"</span><span class="p">,</span> <span class="err">plays_as:</span> <span class="nt">"X"</span> <span class="p">}</span><span class="err">,</span> 
+             <span class="p">{</span> <span class="err">name:</span> <span class="nt">"Clyde"</span><span class="p">,</span> <span class="err">plays_as:</span> <span class="nt">"O"</span> <span class="p">}</span> <span class="err">]</span> <span class="err">}</span>
+</pre></div>
+
+<p>These document paths refer to the following values:</p>
+
+<div class="highlight"><pre><span class="p">[</span><span class="s2">"moves_so_far"</span><span class="p">]</span>           <span class="o">-&gt;</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span> 
+<span class="p">[</span><span class="s2">"moves_so_far"</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>        <span class="o">-&gt;</span> <span class="mi">2</span> 
+<span class="p">[</span><span class="s2">"moves_so_far"</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>        <span class="o">-&gt;</span> <span class="mi">5</span> 
+<span class="p">[</span><span class="s2">"players"</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">"name"</span><span class="p">]</span>     <span class="o">-&gt;</span> <span class="s2">"Bonnie"</span> 
+<span class="p">[</span><span class="s2">"players"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">"plays_as"</span><span class="p">]</span> <span class="o">-&gt;</span> <span class="s2">"O"</span>
+<span class="p">[</span><span class="s2">"players"</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>             <span class="o">-&gt;</span> <span class="p">{</span> <span class="nx">name</span><span class="o">:</span> <span class="s2">"Bonnie"</span><span class="p">,</span> <span class="nx">plays_as</span><span class="o">:</span> <span class="s2">"X"</span> <span class="p">}</span>
+<span class="p">[</span><span class="s2">"players"</span><span class="p">]</span>                <span class="o">-&gt;</span> <span class="p">[</span> <span class="p">{</span> <span class="nx">name</span><span class="o">:</span> <span class="s2">"Bonnie"</span><span class="p">,</span> <span class="nx">plays_as</span><span class="o">:</span> <span class="s2">"X"</span> <span class="p">},</span> 
+                                <span class="p">{</span> <span class="nx">name</span><span class="o">:</span> <span class="s2">"Clyde"</span><span class="p">,</span> <span class="nx">plays_as</span><span class="o">:</span> <span class="s2">"O"</span> <span class="p">}</span> <span class="p">]</span>
+<span class="p">[]</span> <span class="o">-&gt;</span> <span class="p">{</span> <span class="nx">moves_so_far</span><span class="o">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> 
+        <span class="nx">players</span><span class="o">:</span> <span class="p">[</span> <span class="p">{</span> <span class="nx">name</span><span class="o">:</span> <span class="s2">"Bonnie"</span><span class="p">,</span> <span class="nx">plays_as</span><span class="o">:</span> <span class="s2">"X"</span> <span class="p">},</span>         
+                   <span class="p">{</span> <span class="nx">name</span><span class="o">:</span> <span class="s2">"Clyde"</span><span class="p">,</span> <span class="nx">plays_as</span><span class="o">:</span> <span class="s2">"O"</span> <span class="p">}</span> <span class="p">]</span> <span class="p">}</span>
+</pre></div>
+
+<h3>
+<a name="operations" class="anchor" href="#operations"><span class="octicon octicon-link"></span></a>Operations</h3>
+
+<p>The following is a whirlwind tour of the available operations. All of
+the following operations are cumulative and based on an initial
+document: <code>{ moves_so_far: []}</code></p>
+
+<h4>
+<a name="creating-the-document" class="anchor" href="#creating-the-document"><span class="octicon octicon-link"></span></a>Creating the document</h4>
+
+<div class="highlight"><pre><span class="nx">TTT</span><span class="p">.</span><span class="nx">game_data</span> <span class="o">=</span> <span class="nx">Leaves</span><span class="p">.</span><span class="nx">DocManager</span><span class="p">.</span><span class="nx">from_data</span><span class="p">({</span> <span class="nx">moves_so_far</span><span class="o">:</span> <span class="p">[]</span> <span class="p">});</span>
+
+<span class="c1">/// or with cookie storage</span>
+<span class="nx">TTT</span><span class="p">.</span><span class="nx">game_data</span> <span class="o">=</span> <span class="nx">Leaves</span><span class="p">.</span><span class="nx">DocManager</span><span class="p">.</span><span class="nx">from_cookie</span><span class="p">(</span><span class="s1">'tic_tac_toe'</span><span class="p">,</span> <span class="p">{</span> <span class="nx">moves_so_far</span><span class="o">:</span> <span class="p">[]</span> <span class="p">});</span>
+</pre></div>
+
+<h4>
+<a name="setting-a-key-on-the-document" class="anchor" href="#setting-a-key-on-the-document"><span class="octicon octicon-link"></span></a>Setting a key on the document</h4>
+
+<div class="highlight"><pre><span class="nx">TTT</span><span class="p">.</span><span class="nx">game_data</span><span class="p">.</span><span class="nx">set</span><span class="p">([</span><span class="s1">'players'</span><span class="p">],</span> <span class="p">[]);</span>
+<span class="c1">//-&gt; { moves_so_far: [], players: [] }</span>
+
+<span class="nx">TTT</span><span class="p">.</span><span class="nx">game_data</span><span class="p">.</span><span class="nx">set</span><span class="p">([</span><span class="s1">'players'</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">{</span> <span class="nx">name</span><span class="o">:</span> <span class="s2">"Greg"</span> <span class="p">});</span>
+<span class="c1">//-&gt; { moves_so_far: [], players: [ {name: "Greg"} ] }</span>
+
+<span class="nx">TTT</span><span class="p">.</span><span class="nx">game_data</span><span class="p">.</span><span class="nx">set</span><span class="p">([</span><span class="s1">'players'</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">'plays_as'</span><span class="p">],</span> <span class="s2">"X"</span><span class="p">);</span>
+<span class="c1">//-&gt; { moves_so_far: [], players: [ { name: "Greg", plays_as: "X" } ] }</span>
+</pre></div>
+
+<h4>
+<a name="adding-an-element-to-an-array" class="anchor" href="#adding-an-element-to-an-array"><span class="octicon octicon-link"></span></a>Adding an element to an array</h4>
+
+<div class="highlight"><pre><span class="nx">TTT</span><span class="p">.</span><span class="nx">game_data</span><span class="p">.</span><span class="nx">add</span><span class="p">([</span><span class="s1">'players'</span><span class="p">],</span> <span class="p">{</span> <span class="nx">name</span><span class="o">:</span> <span class="s2">"Bob"</span><span class="p">,</span> <span class="nx">plays_as</span><span class="o">:</span> <span class="s2">"O"</span> <span class="p">});</span>
+<span class="c1">// -&gt; { moves_so_far: [], </span>
+<span class="c1">//      players: [ { name: "Bonnie", plays_as: "X" }, </span>
+<span class="c1">//                 { name: "Clyde", plays_as: "O" } ] }</span>
+
+<span class="nx">TTT</span><span class="p">.</span><span class="nx">game_data</span><span class="p">.</span><span class="nx">add</span><span class="p">([</span><span class="s1">'moves_so_far'</span><span class="p">],</span> <span class="mi">2</span><span class="p">);</span>
+<span class="c1">// -&gt; { moves_so_far: [2], </span>
+<span class="c1">//      players: [ { name: "Bonnie", plays_as: "X" }, </span>
+<span class="c1">//                 { name: "Clyde", plays_as: "O" } ] }</span>
+
+<span class="nx">TTT</span><span class="p">.</span><span class="nx">game_data</span><span class="p">.</span><span class="nx">add</span><span class="p">([</span><span class="s1">'moves_so_far'</span><span class="p">],</span> <span class="mi">5</span><span class="p">);</span>
+<span class="c1">// -&gt; { moves_so_far: [2, 5], </span>
+<span class="c1">//      players: [ { name: "Bonnie", plays_as: "X" }, </span>
+<span class="c1">//                 { name: "Clyde", plays_as: "O" } ] }</span>
+</pre></div>
+
+<h4>
+<a name="deleting-things-from-maps-and-arrays" class="anchor" href="#deleting-things-from-maps-and-arrays"><span class="octicon octicon-link"></span></a>Deleting things from maps and arrays</h4>
+
+<div class="highlight"><pre><span class="nx">TTT</span><span class="p">.</span><span class="nx">game_data</span><span class="p">.</span><span class="k">delete</span><span class="p">([</span><span class="s1">'players'</span><span class="p">]);</span>
+<span class="c1">// -&gt; { moves_so_far: [2, 5] }</span>
+
+<span class="nx">TTT</span><span class="p">.</span><span class="nx">game_data</span><span class="p">.</span><span class="k">delete</span><span class="p">([</span><span class="s1">'moves_so_far'</span><span class="p">,</span> <span class="mi">1</span><span class="p">]);</span>
+<span class="c1">// -&gt; { moves_so_far: [2] }</span>
+</pre></div>
+
+<h4>
+<a name="inserting-things-into-an-array" class="anchor" href="#inserting-things-into-an-array"><span class="octicon octicon-link"></span></a>Inserting things into an array</h4>
+
+<div class="highlight"><pre><span class="nx">TTT</span><span class="p">.</span><span class="nx">game_data</span><span class="p">.</span><span class="nx">insert_at</span><span class="p">([</span><span class="s1">'moves_so_far'</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="mi">8</span><span class="p">);</span>
+<span class="c1">// -&gt; { moves_so_far: [2, 8] }</span>
+
+<span class="nx">TTT</span><span class="p">.</span><span class="nx">game_data</span><span class="p">.</span><span class="nx">insert_at</span><span class="p">([</span><span class="s1">'moves_so_far'</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="mi">6</span><span class="p">);</span>
+<span class="c1">// -&gt; { moves_so_far: [6, 2, 8] }</span>
+</pre></div>
+
+<h4>
+<a name="moving-elements-in-an-array" class="anchor" href="#moving-elements-in-an-array"><span class="octicon octicon-link"></span></a>Moving elements in an array</h4>
+
+<div class="highlight"><pre><span class="nx">TTT</span><span class="p">.</span><span class="nx">game_data</span><span class="p">.</span><span class="nx">move_to</span><span class="p">([</span><span class="s1">'moves_so_far'</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="mi">2</span><span class="p">);</span>
+<span class="c1">// -&gt; { moves_so_far: [2, 8, 6] }</span>
+
+<span class="nx">TTT</span><span class="p">.</span><span class="nx">game_data</span><span class="p">.</span><span class="nx">move_to</span><span class="p">([</span><span class="s1">'moves_so_far'</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="mi">2</span><span class="p">);</span>
+<span class="c1">// -&gt; { moves_so_far: [2, 6, 8] }</span>
+</pre></div>
+
+<h3>
+<a name="examining-the-current-state-of-things" class="anchor" href="#examining-the-current-state-of-things"><span class="octicon octicon-link"></span></a>Examining the current state of things</h3>
+
+<h4>
+<a name="getting-the-state-of-an-value-at-a-path" class="anchor" href="#getting-the-state-of-an-value-at-a-path"><span class="octicon octicon-link"></span></a>Getting the state of an value at a path</h4>
+
+<div class="highlight"><pre><span class="nx">TTT</span><span class="p">.</span><span class="nx">game_data</span><span class="p">.</span><span class="nx">get</span><span class="p">([</span><span class="s2">"moves_so_far"</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="c1">// returns 2</span>
+</pre></div>
+
+<h4>
+<a name="getting-the-optimistic-value-of-the-current-document" class="anchor" href="#getting-the-optimistic-value-of-the-current-document"><span class="octicon octicon-link"></span></a>Getting the optimistic value of the current document</h4>
+
+<p>The optimistic value of the current document is the value it should
+hold if all pending operations are successfully saved to the server.</p>
+
+<div class="highlight"><pre><span class="nx">TTT</span><span class="p">.</span><span class="nx">game_data</span><span class="p">.</span><span class="nx">opt_value</span><span class="p">();</span>
+<span class="c1">// returns { moves_so_far: [2, 6, 8] }</span>
+</pre></div>
+
+<h4>
+<a name="getting-the-actual-snapshot-value-of-the-document-in-this-moment" class="anchor" href="#getting-the-actual-snapshot-value-of-the-document-in-this-moment"><span class="octicon octicon-link"></span></a>Getting the actual snapshot value of the document in this moment</h4>
+
+<div class="highlight"><pre><span class="nx">TTT</span><span class="p">.</span><span class="nx">game_data</span><span class="p">.</span><span class="nx">value</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">snapshot_doc</span><span class="p">)</span> <span class="p">{</span> 
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">snapshot_doc</span><span class="p">);</span>
+<span class="p">});</span>
+<span class="c1">// console output: { moves_so_far: [2, 6, 8] }</span>
+</pre></div>
+
+<h4>
+<a name="listening-for-changes" class="anchor" href="#listening-for-changes"><span class="octicon octicon-link"></span></a>Listening for changes</h4>
+
+<p>there are two different change listeners right now.  One for
+optimistic changes and one for actual server confirmed changes.</p>
+
+<p>Listening for server confirmed changes:</p>
+
+<div class="highlight"><pre><span class="nx">TTT</span><span class="p">.</span><span class="nx">game_data</span><span class="p">.</span><span class="nx">changed</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">snapshot_doc</span><span class="p">)</span> <span class="p">{</span> 
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">snapshot_doc</span><span class="p">);</span>
+<span class="p">});</span>
+
+<span class="nx">TTT</span><span class="p">.</span><span class="nx">game_data</span><span class="p">.</span><span class="nx">add</span><span class="p">([</span><span class="s2">"moves_so_far"</span><span class="p">],</span> <span class="mi">7</span><span class="p">)</span>
+
+<span class="c1">// console output: { moves_so_far: [2, 6, 8, 7] }</span>
+</pre></div>
+
+<p>The optimistic change event get triggered immediatly after an
+operation and will be triggered with a rolled back document if an
+error occurs in the queue of pending operations.</p>
+
+<p>Listening for optimistic changes:</p>
+
+<div class="highlight"><pre><span class="nx">TTT</span><span class="p">.</span><span class="nx">game_data</span><span class="p">.</span><span class="nx">opt_changed</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">snapshot_doc</span><span class="p">)</span> <span class="p">{</span> 
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">snapshot_doc</span><span class="p">);</span>
+<span class="p">});</span>
+
+<span class="nx">TTT</span><span class="p">.</span><span class="nx">game_data</span><span class="p">.</span><span class="nx">add</span><span class="p">([</span><span class="s2">"moves_so_far"</span><span class="p">],</span> <span class="mi">3</span><span class="p">)</span>
+
+<span class="c1">// console output: { moves_so_far: [2, 6, 8, 7, 3] }</span>
+</pre></div>
+
+<h3>
+<a name="undo-and-redo" class="anchor" href="#undo-and-redo"><span class="octicon octicon-link"></span></a>Undo and redo</h3>
+
+<p>One of the real benefits of this service is that if you need to undo
+something it is both simple and robust.</p>
+
+<div class="highlight"><pre><span class="c1">// This will trigger all changed and opt_changed listeners with the</span>
+<span class="c1">// reverted document value.</span>
+<span class="nx">TTT</span><span class="p">.</span><span class="nx">game_data</span><span class="p">.</span><span class="nx">undo</span><span class="p">();</span>
+
+<span class="c1">// current document: { moves_so_far: [2, 6, 8, 7] }</span>
+</pre></div>
+
+<p>Redo is just as simple:</p>
+
+<div class="highlight"><pre><span class="c1">// This will trigger all changed and opt_changed listeners with the</span>
+<span class="c1">// reverted document value.</span>
+<span class="nx">TTT</span><span class="p">.</span><span class="nx">game_data</span><span class="p">.</span><span class="nx">redo</span><span class="p">();</span>
+
+<span class="c1">// current document: { moves_so_far: [2, 6, 8, 7, 3] }</span>
+</pre></div>
+
+<p>Redo is a much more transient operation.  Redo data is only recorded
+in local memory when you call undo and is only available until you
+make a <code>add, set, insert_at, move_to</code> or <code>delete</code> operation.  When a
+data changing operation occurs all redo information is erased.</p>
+
+<div class="highlight"><pre><span class="c1">// This will trigger all changed and opt_changed listeners with the</span>
+<span class="c1">// reverted document value.</span>
+<span class="nx">TTT</span><span class="p">.</span><span class="nx">game_data</span><span class="p">.</span><span class="nx">undo</span><span class="p">();</span>
+<span class="nx">TTT</span><span class="p">.</span><span class="nx">game_data</span><span class="p">.</span><span class="nx">undo</span><span class="p">();</span>
+<span class="nx">TTT</span><span class="p">.</span><span class="nx">game_data</span><span class="p">.</span><span class="nx">undo</span><span class="p">();</span>
+<span class="nx">TTT</span><span class="p">.</span><span class="nx">game_data</span><span class="p">.</span><span class="nx">undo</span><span class="p">();</span>
+<span class="c1">// current document: { moves_so_far: [2] }</span>
+
+<span class="nx">TTT</span><span class="p">.</span><span class="nx">game_data</span><span class="p">.</span><span class="nx">redo</span><span class="p">();</span>
+<span class="c1">// current document: { moves_so_far: [2, 6] }</span>
+
+<span class="nx">TTT</span><span class="p">.</span><span class="nx">game_data</span><span class="p">.</span><span class="nx">add</span><span class="p">([</span><span class="s2">"moves_so_far"</span><span class="p">],</span> <span class="mi">3</span><span class="p">);</span>
+<span class="c1">// current document: { moves_so_far: [2, 6, 3] }</span>
+
+<span class="c1">// nothing happens if you redo now</span>
+<span class="nx">TTT</span><span class="p">.</span><span class="nx">game_data</span><span class="p">.</span><span class="nx">redo</span><span class="p">();</span>
+<span class="c1">// current document: { moves_so_far: [2, 6, 3] }</span>
+</pre></div>
+
+<h2>
+<a name="example-applications" class="anchor" href="#example-applications"><span class="octicon octicon-link"></span></a>Example Applications</h2>
+
+<p>You will find the source code for a couple of example applications in
+<code>src/example_apps</code>.</p>
+
+<p>The HTML pages to hold these applications is located in
+<code>public/example_apps</code>.  To run these example applications make sure
+you have <code>ruby</code> installed and do the following:</p>
+
+<div class="highlight"><pre><span class="nb">cd </span>leaves-client
+bundle install
+
+rake server
+</pre></div>
+
+<p>You should now be able to open your browser and navigate to
+<code>localhost:9292</code> and see an example application.</p>
+
+<h4>
+<a name="running-tests" class="anchor" href="#running-tests"><span class="octicon octicon-link"></span></a>Running tests</h4>
+
+<p>Make sure you have the web server running and navigate to
+<code>localhost:9292/test</code>.</p>
+
+<h4>
+<a name="building" class="anchor" href="#building"><span class="octicon octicon-link"></span></a>Building</h4>
+
+<p>Take a look at the Rakefile to get an idea of how to build the
+project.  Working on this project requires nodejs for coffescript and
+ruby for the build tools and JS minification.</p>
+
+<p>The following rake commands are available:</p>
+
+<div class="highlight"><pre>-&gt; rake -T
+
+rake           <span class="c"># compile all src .coffee files into the public/leaves dir</span>
+rake watch     <span class="c"># watch and compile changed src files</span>
+rake server    <span class="c"># Start server for example apps on port 9292</span>
+
+rake clean     <span class="c"># remove compiled and compressed files from public dir</span>
+rake compress  <span class="c"># Compress the compiled files to the public/leaves-compressed dir</span>
+</pre></div>
       </section>
     </div>
     <footer>
