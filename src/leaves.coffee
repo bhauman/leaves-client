@@ -1,6 +1,7 @@
 window.Leaves or= {}
 
 Leaves.root_domain = "http://scratch.leaves.io"
+#Leaves.root_domain = "http://localhost:3000"
 
 Leaves.create = (data_item) ->
   $.ajax Leaves.root_domain + "/json-doc",

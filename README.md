@@ -322,4 +322,3 @@ rake clean     # remove compiled and compressed files from public dir
 rake compress  # Compress the compiled files to the public/leaves-compressed dir
 ```
 
-

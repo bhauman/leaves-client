@@ -13,29 +13,29 @@ Leaves.DocManager.prototype._failer = () ->
   @_swap_pointer(@lpointer._failer()) && @
 
 test "JsonDoc can be instantiated", ->
-  list = new JsonDoc
+  list = new Leaves.JsonDoc
   equal list.action, null
   equal list.previous, null
 
 test "adding item to list", ->
-  list = new JsonDoc
+  list = new Leaves.JsonDoc
   new_list = list.add 3
   ok list.action != new_list.action
   ok list.previous != new_list.previous
   deepEqual new_list.action, {verb:"add", args: [[-1], 3]}
 
 asyncTest "new empty list should have request of empty list", ->
-  list = new JsonDoc
+  list = new Leaves.JsonDoc
   list.request.done (wl) ->
     deepEqual wl.data, []
     start()
 
 test "opt_value for empty list is []", ->
-  list = new JsonDoc
+  list = new Leaves.JsonDoc
   deepEqual list.opt_value(), []
 
 asyncTest "opt_value for added list should work",2, ->
-  list = new JsonDoc
+  list = new Leaves.JsonDoc
   nlist = list.add(5)
   deepEqual nlist.opt_value(), [5]
   nlist.value (wl) ->
@@ -43,86 +43,86 @@ asyncTest "opt_value for added list should work",2, ->
     start()
 
 asyncTest "chaining opt value", ->
-  l = (new JsonDoc).add(1).add(2).add(3).add(4)
+  l = (new Leaves.JsonDoc).add(1).add(2).add(3).add(4)
   l.value (wl) ->
     deepEqual wl.data, [1,2,3,4]
     start()
 
 asyncTest "build with existing Id", 2, ->
-  l = (new JsonDoc).add(1).add(2).add(3).add(4)
+  l = (new Leaves.JsonDoc).add(1).add(2).add(3).add(4)
   deepEqual l.opt_value(), [1,2,3,4]
   l.value (wl) ->
-    JsonDoc.from_identifier(wl._id).value (wln) ->
+    Leaves.JsonDoc.from_identifier(wl._id).value (wln) ->
       deepEqual wln.data, [1,2,3,4]
       start()
 
 asyncTest "build with data", 1, ->
-  JsonDoc.from_data({bob: 5, bill: [1,2]}).value (wln) ->
+  Leaves.JsonDoc.from_data({bob: 5, bill: [1,2]}).value (wln) ->
     deepEqual wln.data, {bob: 5, bill: [1,2]}
     start()
 
 asyncTest "can call set on hash", ->
-  dr = JsonDoc.from_data({}).set("bobo", 5).set("john", 6)
+  dr = Leaves.JsonDoc.from_data({}).set("bobo", 5).set("john", 6)
   dr.value (wl) ->
     deepEqual wl.data, {bobo: 5, john: 6}
     start()
 
 asyncTest "can call set on array", ->
-  dr = JsonDoc.from_data([0,1,2]).set(0, "bob").set(2, "john")
+  dr = Leaves.JsonDoc.from_data([0,1,2]).set(0, "bob").set(2, "john")
   dr.value (wl) ->
     deepEqual wl.data, ["bob", 1, "john"]
     start()
 
 asyncTest "can call set on hash with array of keys", ->
-  dr = JsonDoc.from_data({}).set(["bobo", "jo"], 5).set(["bobo","john"], 6)
+  dr = Leaves.JsonDoc.from_data({}).set(["bobo", "jo"], 5).set(["bobo","john"], 6)
   dr.value (wl) ->
     deepEqual wl.data, {bobo: {jo: 5, john: 6}}
     start()
 
 asyncTest "can call set on array with array of keys", ->
-  dr = JsonDoc.from_data([]).set([0, "jo"], 5).set([1,"john"], 6)
+  dr = Leaves.JsonDoc.from_data([]).set([0, "jo"], 5).set([1,"john"], 6)
   dr.value (wl) ->
     deepEqual wl.data, [{jo: 5}, {john: 6}]
     start()
 
 asyncTest "insert_at on hash", ->
-  dr = JsonDoc.from_data({}).insert_at("bobo", 5).insert_at("john", 6)
+  dr = Leaves.JsonDoc.from_data({}).insert_at("bobo", 5).insert_at("john", 6)
   dr.value (wl) ->
     deepEqual wl.data, {bobo: 5, john: 6}
     start()
 
 asyncTest "insert_at on array", ->
-  dr = JsonDoc.from_data([0,1,2]).insert_at(0, "bob").insert_at(1, "john")
+  dr = Leaves.JsonDoc.from_data([0,1,2]).insert_at(0, "bob").insert_at(1, "john")
   dr.value (wl) ->
     deepEqual wl.data, ["bob", "john", 0, 1, 2]
     start()
 
 asyncTest "insert_at on hash with array of keys", ->
-  dr = JsonDoc.from_data({}).insert_at(["bobo", "jo"], 5).insert_at(["bobo", "john"], 6)
+  dr = Leaves.JsonDoc.from_data({}).insert_at(["bobo", "jo"], 5).insert_at(["bobo", "john"], 6)
   dr.value (wl) ->
     deepEqual wl.data, {bobo: {jo: 5, john: 6}}
     start()
 
 asyncTest "move_to on hash", ->
-  dr = JsonDoc.from_data({bobo: 5, john: 6}).move_to("bobo", "babbet")
+  dr = Leaves.JsonDoc.from_data({bobo: 5, john: 6}).move_to("bobo", "babbet")
   dr.value (wl) ->
     deepEqual wl.data, {babbet: 5, john: 6}
     start()
 
 asyncTest "move_to on array", ->
-  dr = JsonDoc.from_data([0,1,2]).move_to(0, 2)
+  dr = Leaves.JsonDoc.from_data([0,1,2]).move_to(0, 2)
   dr.value (wl) ->
     deepEqual wl.data, [1, 2, 0]
     start()
 
 asyncTest "move_to on array with array of keys", ->
-  dr = JsonDoc.from_data({bobo: [0,1,2]}).move_to(["bobo", 0], 2)
+  dr = Leaves.JsonDoc.from_data({bobo: [0,1,2]}).move_to(["bobo", 0], 2)
   dr.value (wl) ->
     deepEqual wl.data, {bobo: [1, 2, 0]}
     start()
 
 asyncTest "can call get on hash", 3, ->
-  dr = JsonDoc.from_data({}).set("bobo", 5).set("john", 6)
+  dr = Leaves.JsonDoc.from_data({}).set("bobo", 5).set("john", 6)
   equal dr.get("bobo"), 5
   dr.value (wl) ->
     equal dr.get("bobo"), 5
@@ -130,7 +130,7 @@ asyncTest "can call get on hash", 3, ->
     start()
 
 asyncTest "can call get on array", 5, ->
-  dr = JsonDoc.from_data([0,1,2]).set(0, "bob").set(2, "john")
+  dr = Leaves.JsonDoc.from_data([0,1,2]).set(0, "bob").set(2, "john")
   equal dr.get(0), "bob"
   equal dr.get(2), "john"
   dr.value (wl) ->
@@ -140,14 +140,14 @@ asyncTest "can call get on array", 5, ->
     start()
 
 asyncTest "delete keys from array", ->
-  dr = JsonDoc.from_data([0,1,2]).delete(0).delete(0)
+  dr = Leaves.JsonDoc.from_data([0,1,2]).delete(0).delete(0)
   dr.value (wl) ->
     equal dr.get(0), 2
     deepEqual wl.data, [2]
     start()
 
 asyncTest "delete keys from hash", ->
-  dr = JsonDoc.from_data({}).set("bobo", 5).set("john", 6).delete("bobo")
+  dr = Leaves.JsonDoc.from_data({}).set("bobo", 5).set("john", 6).delete("bobo")
   dr.value (wl) ->
     deepEqual wl.data, {john: 6}
     start()
@@ -155,14 +155,14 @@ asyncTest "delete keys from hash", ->
 module "DocManager"
 
 asyncTest "new empty listmanager", 2, ->
-  lm = new DocManager
+  lm = new Leaves.DocManager
   lm.changed (val) ->
     deepEqual lm.opt_value(), []
     deepEqual val, []
     start()
 
 asyncTest "add a value trigger opt change", ->
-  lm = new DocManager
+  lm = new Leaves.DocManager
   counter = 0
   expected  = []
   lm.optimistic_changed (val) ->
@@ -172,7 +172,7 @@ asyncTest "add a value trigger opt change", ->
   lm.add(0).add(1).add(2)
 
 asyncTest "add a value trigger value change", ->
-  lm = new DocManager
+  lm = new Leaves.DocManager
   counter = 0
   expected  = []
   lm.changed (val) ->
@@ -182,7 +182,7 @@ asyncTest "add a value trigger value change", ->
   lm.add(0).add(1).add(2)
 
 asyncTest "testing the fail listener of _swap_pointer",  ->
-  lm = new DocManager
+  lm = new Leaves.DocManager
 
   opt_changes  = []
   lm.optimistic_changed (val) -> opt_changes.push(val)
